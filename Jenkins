@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+    stages {
+        stage ("clone") {
+            steps {
+                git branch: 'main', url: 'https://github.com/balaji5070/sample-node-app.git'
+                sh "ls"
+                
+                
+            }
+        }
+        stage ("docker image") {
+            steps {
+                sh "docker build -t rbalaji2001/node ."
+                sh "docker images"
+                
+            }
+        }
+        stage ("docker hub") {
+            steps {
+                sh "docker login -u rbalaji2001 -p Balaji3152001"
+                sh "docker push rbalaji2001/node"
+                
+            }
+        }
+        stage ("docker container") {
+            steps {
+                sh "docker rm -f node-pipeline"
+                sh "docker run -d --name=node-pipeline -p 8090:9000 rbalaji2001/node"
+                
+            }
+        }
+        
+    }
+    
+}
